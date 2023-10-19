@@ -33,11 +33,6 @@ async function run() {
 
 
 
-    // app.get('/addProduct', async(req, res) => {
-    //     const cursor = productCollection.find();
-    //     const result = await cursor.toArray();
-    //     res.send(result);
-    // })
 
     app.get('/addProduct', async(req, res) => {
         const cursor = productCollection.find();
@@ -60,6 +55,26 @@ async function run() {
         res.send(result);
     })
 
+
+    app.put('/addProduct/:id', async(req, res) =>{
+      const id = req.params.id;
+      const filter = { _id : new ObjectId(id)}
+      const options = {upsert:true};
+      const updatedProduct = req.body;
+      const product = {
+        $set : {
+          productName : updatedProduct.productName ,
+          brand : updatedProduct.brand, 
+          type : updatedProduct.type, 
+          price : updatedProduct.price, 
+          description : updatedProduct.description, 
+          rating : updatedProduct.rating, 
+          photo : updatedProduct.photo
+        }
+      }
+      const result = await productCollection.updateOne(filter, product, options )
+      res.send(result);
+    })
 
 
 
