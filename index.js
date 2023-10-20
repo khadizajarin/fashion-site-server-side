@@ -28,17 +28,44 @@ async function run() {
 
     const productCollection = client.db('productsDB').collection('products')
 
+    
+    const cartCollection = client.db('cartDB').collection('cart')
 
-    const brandCollection =client.db('productsDB').collection('brands')
+    //CRUD operations on My cart product
+
+    app.post('/cart', async(req,res) => {
+      const newCart = req.body;
+      console.log(newCart);
+      const result = await cartCollection.insertOne(newCart);
+      res.send(result);
+    }) 
+
+    app.get('/cart', async(req,res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.delete('/cart/:id', async (req,res) => {
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)}
+      const result = await cartCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
+
+
+// CRUD Operations on Add and update product
+  
 
 
     app.get('/addProduct', async(req, res) => {
-        const cursor = productCollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
     })
+
     app.get('/addProduct/:id', async(req, res) => {
       const id = req.params.id;
       const query = {_id : new ObjectId(id)}
